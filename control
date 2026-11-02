@@ -1,0 +1,8 @@
+Package: com.ctier508.agariobots
+Name: AgarIoBotTweak
+Depends: mobilesubstrate
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: Menu de controle de bots pour Agar.io Mobile
+Author: ctier508
+Maintainer: ctier508

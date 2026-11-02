@@ -1,35 +1,33 @@
-name: CI
+name: Build Tweak
 
-on: 
+on:
   push:
-  schedule:
-    - cron: '0 9 15 * *'
+    branches:
+      - main
+      - master
+  workflow_dispatch:
 
 jobs:
-  build-logos:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest]
+  build:
+    runs-on: macos-14
 
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Theos
+        uses: Randomblock1/theos-action@v1
         with:
-          repository: Randomblock1/FleetsBGone
-          submodules: true
+          theos-src: 'https://github.com'
+          theos-sdks: 'https://github.com'
+          theos-sdks-branch: 'master'
 
-      - name: Prepare Theos
-        uses: randomblock1/theos-action@main
-
-      - name: Build package
+      - name: Compile Tweak
         run: |
-          rm -f packages/*
-          make package FINALPACKAGE=1
+          make package NO_PACKAGE=1
 
-      - name: Upload package
-        uses: actions/upload-artifact@v7
+      - name: Upload Finished Dylib
+        uses: actions/upload-artifact@v4
         with:
-          name: "Package built by ${{ matrix.os }}"
-          path: ${{ github.workspace }}/packages/*.deb
-
-  # TODO: Add a job to build an Orion tweak
+          name: AgarIoBotTweak-Dylib
+          path: .theos/obj/debug/AgarIoBotTweak.dylib
